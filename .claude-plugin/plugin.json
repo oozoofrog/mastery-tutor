@@ -1,7 +1,7 @@
 {
   "name": "mastery-tutor",
-  "version": "0.7.0",
-  "description": "Conversation-native adaptive tutoring with one focused question at a time, worked examples, scaffold fading, transfer checks, retention review, and visible mentor modes.",
+  "version": "0.8.0",
+  "description": "Conversation-native adaptive tutoring with one focused question at a time, worked examples, scaffold fading, transfer checks, retention review, visible mentor modes, and an optional stateless tutoring-state app.",
   "keywords": [
     "education",
     "tutoring",
