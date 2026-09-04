@@ -1,25 +1,25 @@
-# Distribution and publication notes
+# Distribution and publication notes — v0.8.0
 
-## Personal ChatGPT accounts
+## Source distribution
 
-The Plugin Directory is visible across ChatGPT plans, but GitHub marketplace import is a managed-workspace admin feature. Publishing this repository publicly does not create a self-service install path for a personal ChatGPT account.
-
-For the underlying Mastery Tutor skill, ChatGPT supports uploading a skill from **Plugins → Skills → Create → Upload from your computer** where Skills are available.
+The Skill, plugin manifest, and Cloudflare Worker source are public in `oozoofrog/mastery-tutor`.
 
 ## Managed workspace distribution
 
-In eligible Business, Enterprise, and Edu workspaces, admins can import plugins from a public or private GitHub repository. A repository whose root contains `.claude-plugin/plugin.json` is a supported standalone plugin source.
+Eligible Business / Enterprise / Edu workspace administrators can import supported GitHub plugin manifests and configure installation policy. The exact controls depend on the current workspace rollout.
 
-After import, workspace policy controls whether the plugin is **Available** or **Installed**, and eligible plugin owners can share it with selected workspace users, by workspace link, or make it visible in that workspace's plugin directory when permissions allow it.
+## App wrapper
 
-## GitHub distribution
+v0.8.0 adds a no-auth, stateless, read-only MCP app wrapper. Deploy it to an HTTPS remote MCP endpoint (Cloudflare Workers is the reference deployment), test it with MCP Inspector, then configure it as a custom ChatGPT app where Developer Mode supports it.
 
-This repository is useful as an open-source distribution source and for managed-workspace GitHub import. GitHub publication alone does not add Mastery Tutor to the universal public Plugin Directory.
+## Public Plugin Directory
 
-## Universal public Plugins Directory
+Publishing source code or a workspace plugin does not automatically publish a universal directory listing. OpenAI accepts app submissions and approved apps may be distributed through a plugin listing. Review the current safety, privacy, functionality, and submission requirements immediately before submission because Apps SDK remains a changing product surface.
 
-Publishing to a workspace directory is not the same as publishing to the universal public Plugins Directory.
+## Privacy surface
 
-OpenAI documents a public publication/submission flow for Apps SDK apps. Approved app submissions may be distributed through a plugin listing. At the time this document was updated, OpenAI's public help documentation did not document a comparable self-service global submission flow specifically for a skill-only plugin.
+The public policy pages live at:
 
-If universal public-directory publication is required, the currently documented route is to evaluate an Apps SDK app submission. That adds app/MCP, hosting, privacy-policy, review, and maintenance requirements that Mastery Tutor does not otherwise need, so it should be treated as a product-distribution decision rather than a packaging requirement.
+- `https://oozoofrog.dev/mastery-tutor/privacy/`
+- `https://oozoofrog.dev/mastery-tutor/terms/`
+- `https://oozoofrog.dev/mastery-tutor/support/`
