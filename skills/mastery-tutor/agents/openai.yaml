@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mastery Tutor"
+  short_description: "학습 요청과 진행 중인 Mastery Tutor 후속 답변을 감지해 한 문제씩 이어가는 적응형 튜터"
+  default_prompt: "Use $mastery-tutor to teach me through a normal multi-turn ChatGPT conversation. Re-select the skill on follow-up learner turns when a recent Mastery Tutor mentor header marks an active lesson, keep one focused question at a time, adapt to what I already know, and fade support as I improve. My topic and goal are ..."
+
+policy:
+  allow_implicit_invocation: true
