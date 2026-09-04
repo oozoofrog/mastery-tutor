@@ -1,3 +1,7 @@
 .DS_Store
 __MACOSX/
 *.zip
+worker/node_modules/
+worker/.wrangler/
+worker/.dev.vars
+worker/dist/
