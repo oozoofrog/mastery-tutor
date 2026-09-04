@@ -1,60 +1,73 @@
-# Mastery Tutor Plugin v0.7.0
+# Mastery Tutor v0.8.0
 
-A skill-only plugin packaging the Mastery Tutor v0.6.3 tutoring skill as an installable plugin.
+Mastery Tutor is a conversation-native adaptive tutoring workflow for ChatGPT and Codex.
 
-## What changes compared with the standalone skill
+v0.8.0 keeps the existing tutoring Skill and adds a deliberately small Apps SDK/MCP-compatible backend: a stateless Cloudflare Worker that recommends the next pedagogical state. The backend is optional for the Skill itself, but gives the public app a real read-only function rather than a no-op wrapper.
 
-- The plugin becomes a first-class plugin unit rather than only an installed skill.
-- On ChatGPT surfaces that expose plugin invocation controls, users can explicitly select/invoke the plugin instead of relying only on automatic skill selection.
-- No external app, MCP server, account connection, database, or custom UI is required.
-- The underlying tutoring behavior remains in `skills/mastery-tutor/`.
-
-## Structure
+## Architecture
 
 ```text
-mastery-tutor/
-├── .claude-plugin/
-│   └── plugin.json
-├── skills/
-│   └── mastery-tutor/
-│       ├── SKILL.md
-│       ├── agents/openai.yaml
-│       └── references/...
-├── README.md
-└── PUBLICATION.md
+GitHub: oozoofrog/mastery-tutor
+├── .claude-plugin/plugin.json
+├── skills/mastery-tutor/        # teaching policy and conversation UX
+├── worker/                       # Cloudflare remote MCP app
+│   ├── src/server.ts
+│   └── src/state.ts
+└── APP_SUBMISSION.md
+
+GitHub Pages / personal site
+└── https://oozoofrog.dev/mastery-tutor/
+    ├── privacy/
+    ├── terms/
+    └── support/
+
+Cloudflare Workers
+└── https://<worker>.workers.dev/mcp
+    └── tutor_state (read-only, stateless)
 ```
 
-## Validation target
+## What the app does
 
-This package uses the standalone Claude-compatible plugin manifest because OpenAI's GitHub plugin marketplace importer documents `.claude-plugin/plugin.json` as a supported standalone-plugin format when no marketplace manifest is present.
+`tutor_state` accepts only compact structured lesson state such as learner level, current stage, last-result category, support level, and stall count. It returns a recommended mentor, next stage, and scaffold level.
 
-## Multi-turn note
+The app:
 
-Explicit plugin invocation can make selection clearer, but this package does not claim that ChatGPT will re-invoke the plugin on every follow-up turn. Test multi-turn behavior independently.
+- does not need a database;
+- does not require login or OAuth;
+- does not write or modify external data;
+- does not ask for the raw conversation transcript;
+- does not call another model or external data API;
+- does not replace the Skill's subject-matter teaching logic.
 
-## Installation and distribution
+## Deploy the Worker
 
-### Personal ChatGPT accounts
+```bash
+cd worker
+npm install
+npx wrangler login
+npm run deploy
+```
 
-The GitHub **Import marketplace** flow is a managed-workspace admin feature. A personal ChatGPT account does not get a self-service GitHub marketplace import path just because this repository is public.
+Cloudflare's current recommended pattern for new stateless MCP servers is Streamable HTTP with `createMcpHandler()`. After deployment, record the resulting `https://...workers.dev/mcp` URL in `APP_SUBMISSION.md` and test it with MCP Inspector.
 
-For a personal account, install a plugin from the ChatGPT Plugin Directory when that plugin is listed and available for the account. For the underlying Mastery Tutor skill itself, ChatGPT supports **Plugins → Skills → Create → Upload from your computer** where Skills are available.
+## Public pages
 
-This repository therefore provides source distribution and a managed-workspace import source; it is not, by itself, a globally installable public Plugin Directory listing.
+The public website, privacy policy, terms, and support pages are maintained in `oozoofrog/oozoofrog.github.io` and published under `https://oozoofrog.dev/mastery-tutor/`.
 
-### Managed Business / Enterprise / Edu workspaces
+## ChatGPT app testing
 
-For an eligible workspace admin:
+Create a custom app in ChatGPT Developer Mode using the deployed MCP endpoint and select **Scan Tools**. Plan/workspace support for arbitrary custom MCP tools varies; check the current OpenAI Help Center before testing or submitting.
 
-1. Open **Workspace settings → Plugins → Add → Import marketplace**.
-2. Source: `https://github.com/oozoofrog/mastery-tutor`
-3. Path: leave empty.
-4. Branch: leave empty to follow the default branch.
-5. Import, then open the imported plugin and set Installation policy to **Available** or **Installed**.
-6. To share inside the workspace, open the plugin → `…` → **Share plugin** and choose the available audience.
+## Plugin packaging
 
-This repository uses the standalone plugin format with `.claude-plugin/plugin.json` at the repository root.
+The repository continues to use `.claude-plugin/plugin.json` for the skill/plugin source. The manifest does not invent a public app identifier before OpenAI creates or approves the app. Once the app has a canonical identity in OpenAI's system, associate it with the plugin listing through the current submission/plugin-management flow.
 
-### Public Plugin Directory
+## Multi-turn limitation
 
-A public GitHub repository does not automatically publish a plugin to the universal public Plugin Directory. OpenAI currently documents a publication path for submitted Apps SDK apps, which may be distributed through a plugin listing after approval; it does not document a comparable self-service global submission path for a skill-only plugin.
+An app selected for one ChatGPT message is not documented as a conversation-wide persistent mode. The Skill remains responsible for conversation continuity; the app only provides deterministic pedagogical state advice when it is available and invoked.
+
+## Distribution
+
+- Public source: this GitHub repository.
+- Managed workspace plugin import: supported where GitHub plugin marketplace import is available.
+- Public Plugin Directory: requires the current OpenAI app/plugin submission and review flow; a public GitHub repository alone does not publish a directory listing.
