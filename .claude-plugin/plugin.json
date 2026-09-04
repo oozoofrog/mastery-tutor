@@ -1,0 +1,15 @@
+{
+  "name": "mastery-tutor",
+  "version": "0.7.0",
+  "description": "Conversation-native adaptive tutoring with one focused question at a time, worked examples, scaffold fading, transfer checks, retention review, and visible mentor modes.",
+  "keywords": [
+    "education",
+    "tutoring",
+    "learning",
+    "practice",
+    "mastery",
+    "socratic",
+    "feynman"
+  ],
+  "skills": "./skills/"
+}
